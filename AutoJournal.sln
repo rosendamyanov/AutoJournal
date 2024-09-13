@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoJournal.Data", "AutoJou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoJournal.Services", "AutoJournal.Services\AutoJournal.Services.csproj", "{1A2AFB60-6402-4CD3-ADE2-03DD08CBC825}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoJournal.Common", "AutoJournal.Common\AutoJournal.Common.csproj", "{2973EFFC-6863-4C0E-8BBF-46C12C8698FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{1A2AFB60-6402-4CD3-ADE2-03DD08CBC825}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A2AFB60-6402-4CD3-ADE2-03DD08CBC825}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A2AFB60-6402-4CD3-ADE2-03DD08CBC825}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2973EFFC-6863-4C0E-8BBF-46C12C8698FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2973EFFC-6863-4C0E-8BBF-46C12C8698FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2973EFFC-6863-4C0E-8BBF-46C12C8698FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2973EFFC-6863-4C0E-8BBF-46C12C8698FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
