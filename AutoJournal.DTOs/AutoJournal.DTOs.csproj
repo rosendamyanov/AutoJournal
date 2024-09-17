@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AutoJournal.Data\AutoJournal.Data.csproj" />
-    <ProjectReference Include="..\AutoJournal.DTOs\AutoJournal.DTOs.csproj" />
+    <Folder Include="Response\" />
   </ItemGroup>
 
 </Project>

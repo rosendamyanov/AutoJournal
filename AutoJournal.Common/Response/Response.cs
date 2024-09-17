@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AutoJournal.Common.Response
+﻿namespace AutoJournal.Common.Response
 {
     public class Response
     {

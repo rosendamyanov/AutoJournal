@@ -1,4 +1,10 @@
 using AutoJournal.Data.Context;
+using AutoJournal.Data.Repositories;
+using AutoJournal.Data.Repositories.Contracts;
+using AutoJournal.Services.Factory;
+using AutoJournal.Services.Factory.Contracts;
+using AutoJournal.Services.Services;
+using AutoJournal.Services.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 namespace AutoJournal.API
@@ -18,6 +24,17 @@ namespace AutoJournal.API
             });
 
             // Add services to the container.
+            // Repositories
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+
+            // Services
+            builder.Services.AddScoped<IUserService, UserService>();
+
+
+            // Factories
+            builder.Services.AddScoped<IUserFactory, UserFactory>();
+
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
