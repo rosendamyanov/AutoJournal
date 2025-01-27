@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AutoJournal.Common\AutoJournal.Common.csproj" />
     <ProjectReference Include="..\AutoJournal.Data\AutoJournal.Data.csproj" />
     <ProjectReference Include="..\AutoJournal.DTOs\AutoJournal.DTOs.csproj" />
   </ItemGroup>

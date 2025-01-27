@@ -1,4 +1,5 @@
-﻿using AutoJournal.DTOs.Request;
+﻿using AutoJournal.Common.Response;
+using AutoJournal.DTOs.Request;
 using AutoJournal.Services.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,9 +19,14 @@ namespace AutoJournal.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserRegisterRequestDTO user)
         {
-            bool response = await _userService.Register(user);
+            ApiResponse<string> response = await _userService.Register(user);
 
-            return  response ? Ok(response) : BadRequest();
+            if (response.IsSuccess)
+            {
+                return Ok(response); 
+            }
+
+            return BadRequest(response); 
         }
     }
 }

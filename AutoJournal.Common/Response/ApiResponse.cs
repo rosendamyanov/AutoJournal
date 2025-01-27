@@ -1,6 +1,6 @@
 ﻿namespace AutoJournal.Common.Response
 {
-    public class Response<T>
+    public class ApiResponse<T>
     {
         public bool IsSuccess { get; set; }
         public T Data { get; set; }
@@ -10,9 +10,9 @@
         /// <summary>
         /// Creates a success response.
         /// </summary>
-        public static Response<T> Success(T data, string message = "Operation Succesful.")
+        public static ApiResponse<T> Success(T data, string message = "Operation Succesful.")
         {
-            return new Response<T>
+            return new ApiResponse<T>
             {
                 IsSuccess = true,
                 Data = data,
@@ -23,9 +23,9 @@
         /// <summary>
         /// Creates a failure response.
         /// </summary>
-        public static Response<T> Failure(string message, string errorCode = null)
+        public static ApiResponse<T> Failure(string message, string errorCode = null)
         {
-            return new Response<T>
+            return new ApiResponse<T>
             {
                 IsSuccess = false,
                 Data = default,

@@ -5,6 +5,8 @@ using AutoJournal.Services.Factory;
 using AutoJournal.Services.Factory.Contracts;
 using AutoJournal.Services.Services;
 using AutoJournal.Services.Services.Contracts;
+using AutoJournal.Services.Validation.AuthValidation;
+using AutoJournal.Services.Validation.AuthValidation.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 namespace AutoJournal.API
@@ -35,6 +37,8 @@ namespace AutoJournal.API
             // Factories
             builder.Services.AddScoped<IAuthFactory, AuthFactory>();
 
+            // Validators
+            builder.Services.AddScoped<IEmailValidation, EmailValidation>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
