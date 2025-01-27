@@ -2,7 +2,7 @@
 
 namespace AutoJournal.Services.Services.Contracts
 {
-    public interface IUserService
+    public interface IAuthService
     {
         Task<bool> Register(UserRegisterRequestDTO user);
     }

@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AutoJournal.Data.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class AuthRepository : IAuthRepository
     {
         private readonly ApplicationContext _context;
 
-        public UserRepository(ApplicationContext context)
+        public AuthRepository(ApplicationContext context)
         {
             _context = context;
         }

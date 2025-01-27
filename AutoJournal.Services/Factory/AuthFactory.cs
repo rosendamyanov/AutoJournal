@@ -4,7 +4,7 @@ using AutoJournal.Services.Factory.Contracts;
 
 namespace AutoJournal.Services.Factory
 {
-    public class UserFactory : IUserFactory
+    public class AuthFactory : IAuthFactory
     {
         public User Map(UserRegisterRequestDTO request)
         {

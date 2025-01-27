@@ -6,11 +6,11 @@ using AutoJournal.Services.Services.Contracts;
 
 namespace AutoJournal.Services.Services
 {
-    public class UserService : IUserService
+    public class AuthService : IAuthService
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IUserFactory _userFactory;
-        public UserService(IUserRepository userRepository, IUserFactory userFactory)
+        private readonly IAuthRepository _userRepository;
+        private readonly IAuthFactory _userFactory;
+        public AuthService(IAuthRepository userRepository, IAuthFactory userFactory)
         {
             _userRepository = userRepository;
             _userFactory = userFactory;
@@ -20,7 +20,7 @@ namespace AutoJournal.Services.Services
         {
             //Should implement user validations(username uniqueness, email uniqueness, password chars etc)
 
-            
+            //Username and Email 
             if(await _userRepository.UserExists(requestUser.Username, requestUser.Email))
             {
                 return false;

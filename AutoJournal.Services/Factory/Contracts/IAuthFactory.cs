@@ -3,7 +3,7 @@ using AutoJournal.DTOs.Request;
 
 namespace AutoJournal.Services.Factory.Contracts
 {
-    public interface IUserFactory
+    public interface IAuthFactory
     {
         User Map(UserRegisterRequestDTO request);
     }

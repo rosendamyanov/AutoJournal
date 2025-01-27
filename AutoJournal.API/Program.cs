@@ -25,15 +25,15 @@ namespace AutoJournal.API
 
             // Add services to the container.
             // Repositories
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
 
             // Services
-            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
 
             // Factories
-            builder.Services.AddScoped<IUserFactory, UserFactory>();
+            builder.Services.AddScoped<IAuthFactory, AuthFactory>();
 
 
             builder.Services.AddControllers();

@@ -4,18 +4,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AutoJournal.API.Controllers
 {
-    [Route("api/users")]
+    [Route("api/auth")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class AuthController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IAuthService _userService;
 
-        public UserController(IUserService userService)
+        public AuthController(IAuthService userService)
         {
             _userService = userService;
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<IActionResult> Register(UserRegisterRequestDTO user)
         {
             bool response = await _userService.Register(user);
