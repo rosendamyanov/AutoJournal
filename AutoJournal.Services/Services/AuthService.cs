@@ -22,7 +22,10 @@ namespace AutoJournal.Services.Services
 
         public async Task<ApiResponse<string>> Register(UserRegisterRequestDTO requestUser)
         {
-            //Should implement user validations(username uniqueness, email uniqueness, password chars etc)
+            //TO DO:
+            //1.Validation if the email domain is reachable - SignalR
+            //2.Password encryption
+            //3.Validation for specific/needed password chars "!@#$%^&*", uppercase and lowercase letters is a must!
 
             //Username and Email 
             if(await _userRepository.UserExists(requestUser.Username, requestUser.Email))
