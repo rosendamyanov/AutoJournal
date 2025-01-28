@@ -28,5 +28,16 @@ namespace AutoJournal.API.Controllers
 
             return BadRequest(response); 
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(UserLoginRequestDTO user)
+        {
+            ApiResponse<string> response = await _userService.Login(user);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
     }
 }

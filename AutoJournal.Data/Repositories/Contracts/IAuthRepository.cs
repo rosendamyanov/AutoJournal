@@ -6,5 +6,6 @@ namespace AutoJournal.Data.Repositories.Contracts
     {
         Task<bool> Register(User user);
         Task<bool> UserExists(string username, string email);
+        Task<User?> GetUserByIdentifier(string identifier);
     }
 }

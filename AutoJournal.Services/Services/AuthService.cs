@@ -25,28 +25,44 @@ namespace AutoJournal.Services.Services
             //TO DO:
             //1.Validation if the email domain is reachable - SignalR
             //2.Password encryption
-            //3.Validation for specific/needed password chars "!@#$%^&*", uppercase and lowercase letters is a must!
+            //3.Validation for specific/needed password chars "!@#$%^&*", uppercase and lowercase letters is a must, 8-64 chars!
+            //4.Phone number validation.
 
             //Username and Email 
-            if(await _userRepository.UserExists(requestUser.Username, requestUser.Email))
+            if (await _userRepository.UserExists(requestUser.Username, requestUser.Email))
             {
-                return ApiResponse<string>.Failure("Username or email already exists.", "USER_EXISTS");
+                return ApiResponse<string>.Failure(ResponseMessages.UserExists, ResponseCodes.UserExists);
             }
 
             if (!_emailValidation.IsEmailValid(requestUser.Email))
             {
-                return ApiResponse<string>.Failure("Email is not valid", "EMAIL_INVALID");
+                return ApiResponse<string>.Failure(ResponseMessages.InvalidEmail, ResponseCodes.InvalidEmail);
             }
 
             User user = _authFactory.Map(requestUser);
 
             bool response = await _userRepository.Register(user);
 
-            if (response)
+            return response
+                ? ApiResponse<string>.Success(ResponseMessages.UserRegistered)
+                : ApiResponse<string>.Failure(ResponseMessages.RegistratoinFailed, ResponseCodes.RegistrationFailed);
+        }
+
+        public async Task<ApiResponse<string>> Login(UserLoginRequestDTO requestUser)
+        {
+            User user = await _userRepository.GetUserByIdentifier(requestUser.Username);
+
+            if (user == null)
             {
-                return ApiResponse<string>.Success("User registered successfully.");
+                return ApiResponse<string>.Failure("User not found", "USER_NOT_FOUND");
             }
-            return ApiResponse<string>.Failure("User registration failed, please try again", "REGISTRATION_FAILED");
+
+            if(requestUser.Password != user.PasswordHash)
+            {
+                return ApiResponse<string>.Failure("Wrong username or password", "INVALID_CREDENTIALS");
+            }
+
+            return ApiResponse<string>.Success("Successfully logged in.");
         }
     }
 }

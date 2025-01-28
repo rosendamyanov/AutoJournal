@@ -24,5 +24,10 @@ namespace AutoJournal.Data.Repositories
         {
             return await _context.Users.AnyAsync(u => u.Username == username || u.Email == email);
         }
+
+        public async Task<User?> GetUserByIdentifier(string identifier)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Username == identifier || u.Email == identifier);
+        }
     }
 }
