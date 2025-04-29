@@ -12,7 +12,7 @@ namespace AutoJournal.Services.Validation.AuthValidation
             if (string.IsNullOrWhiteSpace(email))
                 return false;
 
-            string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            string pattern = @"^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$";
             return Regex.IsMatch(email, pattern);
         }
     }

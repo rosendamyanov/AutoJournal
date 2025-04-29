@@ -5,7 +5,7 @@ namespace AutoJournal.Data.Repositories.Contracts
     public interface IAuthRepository
     {
         Task<bool> Register(User user);
-        Task<bool> UserExists(string username, string email);
+        Task<(bool usernameExists, bool emailExists)> CheckUserExistenceAsync(string username, string email);
         Task<User?> GetUserByIdentifier(string identifier);
     }
 }

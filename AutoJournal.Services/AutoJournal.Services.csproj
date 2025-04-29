@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\AutoJournal.Common\AutoJournal.Common.csproj" />
     <ProjectReference Include="..\AutoJournal.Data\AutoJournal.Data.csproj" />
     <ProjectReference Include="..\AutoJournal.DTOs\AutoJournal.DTOs.csproj" />

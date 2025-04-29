@@ -13,7 +13,7 @@ namespace AutoJournal.Services.Factory
                 Id = new Guid(),
                 Username = request.Username,
                 Email = request.Email,
-                PasswordHash = request.PasswordHash,
+                PasswordHash = request.Password,
                 PhoneNumber = request.PhoneNumber,
             };
             return user;

@@ -4,6 +4,7 @@ using AutoJournal.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AutoJournal.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20250331134756_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,17 +65,9 @@ namespace AutoJournal.Data.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FullPhoneNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneCountryCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -80,24 +75,15 @@ namespace AutoJournal.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("PhoneVerified")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("Username")
-                        .IsUnique();
 
                     b.ToTable("Users");
 
@@ -107,11 +93,8 @@ namespace AutoJournal.Data.Migrations
                             Id = new Guid("a1b2c3d4-1234-5678-9012-abcdef123456"),
                             CreatedAt = new DateTime(2025, 3, 31, 13, 42, 21, 0, DateTimeKind.Unspecified),
                             Email = "test@test.com",
-                            FullPhoneNumber = "359882251418",
                             PasswordHash = "123",
-                            PhoneCountryCode = "359",
-                            PhoneNumber = "882251418",
-                            PhoneVerified = false,
+                            PhoneNumber = "1234567890",
                             Role = "User",
                             Username = "Test"
                         });

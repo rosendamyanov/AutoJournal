@@ -39,6 +39,7 @@ namespace AutoJournal.API
 
             // Validators
             builder.Services.AddScoped<IEmailValidation, EmailValidation>();
+            builder.Services.AddScoped<IPasswordValidation, PasswordValidation>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -20,9 +20,22 @@ namespace AutoJournal.Data.Repositories
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> UserExists(string username, string email)
+        public async Task<(bool usernameExists, bool emailExists)> CheckUserExistenceAsync(string username, string email)
         {
-            return await _context.Users.AnyAsync(u => u.Username == username || u.Email == email);
+
+             var matches = await _context.Users
+                .Where(u => u.Username == username || u.Email == email)
+                .Select( u => new 
+                {
+                    u.Username, 
+                    u.Email
+                })
+                .ToListAsync();
+
+            return (
+                usernameExists: matches.Any(u => u.Username == username),
+                emailExists: matches.Any(u => u.Email == email)
+                );
         }
 
         public async Task<User?> GetUserByIdentifier(string identifier)
