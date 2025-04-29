@@ -1,11 +1,12 @@
 ﻿using AutoJournal.Common.Response;
 using AutoJournal.DTOs.Request;
+using AutoJournal.DTOs.Response;
 
 namespace AutoJournal.Services.Services.Contracts
 {
     public interface IAuthService
     {
-        Task<ApiResponse<string>> Register(UserRegisterRequestDTO user);
-        Task<ApiResponse<string>> Login(UserLoginRequestDTO requestUser);
+        Task<ApiResponse<AuthResponse>> Register(UserRegisterRequestDTO user);
+        Task<ApiResponse<AuthResponse>> Login(UserLoginRequestDTO requestUser);
     }
 }

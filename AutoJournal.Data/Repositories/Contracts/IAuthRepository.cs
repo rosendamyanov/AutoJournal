@@ -7,5 +7,6 @@ namespace AutoJournal.Data.Repositories.Contracts
         Task<bool> Register(User user);
         Task<(bool usernameExists, bool emailExists)> CheckUserExistenceAsync(string username, string email);
         Task<User?> GetUserByIdentifier(string identifier);
+        Task SaveRefreshTokenAsync(RefreshToken newToken);
     }
 }

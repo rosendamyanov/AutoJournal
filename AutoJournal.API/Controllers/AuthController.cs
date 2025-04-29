@@ -1,5 +1,6 @@
 ﻿using AutoJournal.Common.Response;
 using AutoJournal.DTOs.Request;
+using AutoJournal.DTOs.Response;
 using AutoJournal.Services.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,7 @@ namespace AutoJournal.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserRegisterRequestDTO user)
         {
-            ApiResponse<string> response = await _userService.Register(user);
+            ApiResponse<AuthResponse> response = await _userService.Register(user);
 
             if (response.IsSuccess)
             {
@@ -32,7 +33,7 @@ namespace AutoJournal.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserLoginRequestDTO user)
         {
-            ApiResponse<string> response = await _userService.Login(user);
+            ApiResponse<AuthResponse> response = await _userService.Login(user);
             if (response.IsSuccess)
             {
                 return Ok(response);

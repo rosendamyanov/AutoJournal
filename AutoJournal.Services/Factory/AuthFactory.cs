@@ -15,6 +15,8 @@ namespace AutoJournal.Services.Factory
                 Email = request.Email,
                 PasswordHash = request.Password,
                 PhoneNumber = request.PhoneNumber,
+                FullPhoneNumber = "359882223626",
+                PhoneCountryCode = "BG"
             };
             return user;
         }

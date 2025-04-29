@@ -6,6 +6,9 @@ using AutoJournal.Services.Factory.Contracts;
 using AutoJournal.Services.Services.Contracts;
 using AutoJournal.Services.Validation.AuthValidation.Contracts;
 using BCrypt.Net;
+using AutoJournal.DTOs.Response;
+using AutoJournal.Common.Models;
+using Microsoft.Extensions.Options;
 
 namespace AutoJournal.Services.Services
 {
@@ -15,18 +18,28 @@ namespace AutoJournal.Services.Services
         private readonly IAuthFactory _authFactory;
         private readonly IEmailValidation _emailValidation;
         private readonly IPasswordValidation _passwordValidation;
-        public AuthService(IAuthRepository userRepository, IAuthFactory userFactory, IEmailValidation emailValidation, IPasswordValidation passwordValidation)
+        private readonly IJwtService _jwtService;
+        private readonly IOptions<JwtSettings> _jwtSettings;
+        public AuthService(
+            IAuthRepository userRepository, 
+            IAuthFactory userFactory, 
+            IEmailValidation emailValidation, 
+            IPasswordValidation passwordValidation, 
+            IJwtService jwtService,
+            IOptions<JwtSettings> jwtSettings)
         {
             _userRepository = userRepository;
             _authFactory = userFactory;
             _emailValidation = emailValidation;
             _passwordValidation = passwordValidation;
+            _jwtService = jwtService;
+            _jwtSettings = jwtSettings;
+            
         }
 
-        public async Task<ApiResponse<string>> Register(UserRegisterRequestDTO requestUser)
+        public async Task<ApiResponse<AuthResponse>> Register(UserRegisterRequestDTO requestUser)
         {
             //TO DO:
-            //1.Add JWT.
             //3.Phone number validation.
             //4.Validation if the email domain is reachable - SignalR
             //5.Logging Erros in .log files or app console for easier debugging and monitorig
@@ -35,12 +48,12 @@ namespace AutoJournal.Services.Services
             
             if (!_emailValidation.IsEmailValid(requestUser.Email))
             {
-                return ApiResponse<string>.Failure(ResponseMessages.InvalidEmail, ResponseCodes.InvalidEmail);
+                return ApiResponse<AuthResponse>.Failure(ResponseMessages.InvalidEmail, ResponseCodes.InvalidEmail);
             }
 
             if (!_passwordValidation.IsStrong(requestUser.Password))
             {
-                return ApiResponse<string>.Failure(ResponseMessages.WeakPassword, ResponseCodes.WeakPassword);
+                return ApiResponse<AuthResponse>.Failure(ResponseMessages.WeakPassword, ResponseCodes.WeakPassword);
             }
             
             //Username and Email check if they already exist.
@@ -49,11 +62,11 @@ namespace AutoJournal.Services.Services
             switch(true)
             {
                 case true when usernameExists:
-                    return ApiResponse<string>.Failure(ResponseMessages.UsernameExists, ResponseCodes.UsernameExists);
+                    return ApiResponse<AuthResponse>.Failure(ResponseMessages.UsernameExists, ResponseCodes.UsernameExists);
                 case true when emailExists:
-                    return ApiResponse<string>.Failure(ResponseMessages.EmailExists, ResponseCodes.EmailExists);
+                    return ApiResponse<AuthResponse>.Failure(ResponseMessages.EmailExists, ResponseCodes.EmailExists);
                 case true when usernameExists  && emailExists:
-                    return ApiResponse<string>.Failure(ResponseMessages.UsernameAndEmailExists, ResponseCodes.UsernameAndEmailExists);
+                    return ApiResponse<AuthResponse>.Failure(ResponseMessages.UsernameAndEmailExists, ResponseCodes.UsernameAndEmailExists);
             }
 
                 
@@ -61,28 +74,57 @@ namespace AutoJournal.Services.Services
                  
             User user = _authFactory.Map(requestUser);
 
-            bool response = await _userRepository.Register(user);
+            bool registrationSuccess = await _userRepository.Register(user);
 
-            return response
-                ? ApiResponse<string>.Success(ResponseMessages.UserRegistered)
-                : ApiResponse<string>.Failure(ResponseMessages.RegistratoinFailed, ResponseCodes.RegistrationFailed);
+            if (!registrationSuccess)
+            {
+                return ApiResponse<AuthResponse>.Failure(ResponseMessages.RegistratoinFailed, ResponseCodes.RegistrationFailed);
+            }
+
+            //Generate tokens
+            var accessToken = _jwtService.GenerateAccessToken(user);
+            var (rawRefreshToken, refreshToken) = _jwtService.GenerateRefreshToken();
+            //Store tokens
+            refreshToken.UserId = user.Id;
+            await _userRepository.SaveRefreshTokenAsync(refreshToken);
+
+            return ApiResponse<AuthResponse>.Success(new AuthResponse()
+            {
+                AccessToken = accessToken,
+                RefreshToken = rawRefreshToken,
+                AccessTokenExpiry = DateTime.UtcNow.AddMinutes(_jwtSettings.Value.AccessTokenExpirationMinutes)
+            },ResponseMessages.UserRegistered);
+
         }
 
-        public async Task<ApiResponse<string>> Login(UserLoginRequestDTO requestUser)
+        public async Task<ApiResponse<AuthResponse>> Login(UserLoginRequestDTO requestUser)
         {
             User? user = await _userRepository.GetUserByIdentifier(requestUser.Username);
 
             if (user == null)
             {
-                return ApiResponse<string>.Failure(ResponseMessages.UserNotFound, ResponseCodes.UserNotFound);
+                return ApiResponse<AuthResponse>.Failure(ResponseMessages.UserNotFound, ResponseCodes.UserNotFound);
             }
 
             if (!BCrypt.Net.BCrypt.Verify(requestUser.Password, user.PasswordHash))
             {
-                return ApiResponse<string>.Failure(ResponseMessages.InvalidCredentials, ResponseCodes.InvalidCredentials);
+                return ApiResponse<AuthResponse>.Failure(ResponseMessages.InvalidCredentials, ResponseCodes.InvalidCredentials);
             }
 
-            return ApiResponse<string>.Success(ResponseMessages.UserLogged);
+            // Generate tokens
+            var accessToken = _jwtService.GenerateAccessToken(user);
+            var (rawRefreshToken, refreshToken) = _jwtService.GenerateRefreshToken();
+
+            // Store refresh token
+            refreshToken.UserId = user.Id;
+            await _userRepository.SaveRefreshTokenAsync(refreshToken);
+
+            return ApiResponse<AuthResponse>.Success(new AuthResponse
+            {
+                AccessToken = accessToken,
+                RefreshToken = rawRefreshToken,
+                AccessTokenExpiry = DateTime.UtcNow.AddMinutes(_jwtSettings.Value.AccessTokenExpirationMinutes)
+            }, ResponseMessages.UserLogged);
         }
     }
 }

@@ -1,3 +1,4 @@
+using AutoJournal.Common.Models;
 using AutoJournal.Data.Context;
 using AutoJournal.Data.Repositories;
 using AutoJournal.Data.Repositories.Contracts;
@@ -9,6 +10,7 @@ using AutoJournal.Services.Validation.AuthValidation;
 using AutoJournal.Services.Validation.AuthValidation.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.OpenApi.Models;
 namespace AutoJournal.API
 {
     public class Program
@@ -25,6 +27,8 @@ namespace AutoJournal.API
                 options.EnableSensitiveDataLogging();
             });
 
+            builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+
             // Add services to the container.
             // Repositories
             builder.Services.AddScoped<IAuthRepository, AuthRepository>();
@@ -32,7 +36,7 @@ namespace AutoJournal.API
 
             // Services
             builder.Services.AddScoped<IAuthService, AuthService>();
-
+            builder.Services.AddScoped<IJwtService, JwtService>();
 
             // Factories
             builder.Services.AddScoped<IAuthFactory, AuthFactory>();
@@ -44,7 +48,15 @@ namespace AutoJournal.API
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer"
+                });
+            });
 
             var app = builder.Build();
 
