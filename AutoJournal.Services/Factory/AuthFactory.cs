@@ -16,7 +16,8 @@ namespace AutoJournal.Services.Factory
                 PasswordHash = request.Password,
                 PhoneNumber = request.PhoneNumber,
                 FullPhoneNumber = "359882223626",
-                PhoneCountryCode = "BG"
+                PhoneCountryCode = "BG",
+                RefreshTokens = new List<RefreshToken>()
             };
             return user;
         }

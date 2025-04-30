@@ -58,7 +58,7 @@ namespace AutoJournal.Services.Services
             
             //Username and Email check if they already exist.
             (bool usernameExists, bool emailExists) = await _userRepository.CheckUserExistenceAsync(requestUser.Username, requestUser.Email);
-
+             
             switch(true)
             {
                 case true when usernameExists:
@@ -69,24 +69,22 @@ namespace AutoJournal.Services.Services
                     return ApiResponse<AuthResponse>.Failure(ResponseMessages.UsernameAndEmailExists, ResponseCodes.UsernameAndEmailExists);
             }
 
-                
             requestUser.Password = BCrypt.Net.BCrypt.HashPassword(requestUser.Password);
                  
             User user = _authFactory.Map(requestUser);
+            // Generate tokens
+            var accessToken = _jwtService.GenerateAccessToken(user);
+            var (rawRefreshToken, refreshToken) = _jwtService.GenerateRefreshToken();
+            // Store refresh token
+            refreshToken.UserId = user.Id;
+            user.RefreshTokens.Add(refreshToken);
 
-            bool registrationSuccess = await _userRepository.Register(user);
+            bool isRegistrationSuccess = await _userRepository.AddUserAsync(user);
 
-            if (!registrationSuccess)
+            if (!isRegistrationSuccess)
             {
                 return ApiResponse<AuthResponse>.Failure(ResponseMessages.RegistratoinFailed, ResponseCodes.RegistrationFailed);
             }
-
-            //Generate tokens
-            var accessToken = _jwtService.GenerateAccessToken(user);
-            var (rawRefreshToken, refreshToken) = _jwtService.GenerateRefreshToken();
-            //Store tokens
-            refreshToken.UserId = user.Id;
-            await _userRepository.SaveRefreshTokenAsync(refreshToken);
 
             return ApiResponse<AuthResponse>.Success(new AuthResponse()
             {
@@ -114,7 +112,6 @@ namespace AutoJournal.Services.Services
             // Generate tokens
             var accessToken = _jwtService.GenerateAccessToken(user);
             var (rawRefreshToken, refreshToken) = _jwtService.GenerateRefreshToken();
-
             // Store refresh token
             refreshToken.UserId = user.Id;
             await _userRepository.SaveRefreshTokenAsync(refreshToken);

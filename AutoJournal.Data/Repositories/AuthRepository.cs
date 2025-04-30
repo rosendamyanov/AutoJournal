@@ -14,7 +14,7 @@ namespace AutoJournal.Data.Repositories
             _context = context;
         }
 
-        public async Task<bool> Register(User user)
+        public async Task<bool> AddUserAsync(User user)
         {
             _context.Add(user);
             return await _context.SaveChangesAsync() > 0;
