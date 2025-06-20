@@ -6,7 +6,7 @@ namespace AutoJournal.Services.Services.Contracts
 {
     public interface IAuthService
     {
-        Task<ApiResponse<AuthResponse>> Register(UserRegisterRequestDTO user);
-        Task<ApiResponse<AuthResponse>> Login(UserLoginRequestDTO requestUser);
+        Task<ApiResponse<AuthResponseDto>> Register(UserRegisterRequestDTO user);
+        Task<ApiResponse<AuthResponseDto>> Login(UserLoginRequestDTO requestUser);
     }
 }

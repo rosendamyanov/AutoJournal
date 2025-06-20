@@ -15,23 +15,34 @@ namespace AutoJournal.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.RefreshTokens)
-                .WithOne(rt => rt.User)
-                .HasForeignKey(rt => rt.UserId);
+            modelBuilder.Entity<User>(user =>
+            {
+                user.HasIndex(u => u.Username).IsUnique();
+                user.HasIndex(u => u.Email).IsUnique();
+            });
 
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Username)
-                .IsUnique();
+            modelBuilder.Entity<RefreshToken>(refreshToken =>
+            {
+                refreshToken.HasOne(rt => rt.User)
+                            .WithMany(u => u.RefreshTokens)
+                            .HasForeignKey(rt => rt.UserId);
 
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Email)
-                .IsUnique();
+                refreshToken.HasIndex(rt => rt.TokenHash).IsUnique();
+            });
+
+            modelBuilder.Entity<RevokedToken>(revokedToken =>
+            {
+                revokedToken.HasOne(rt => rt.User)
+                            .WithMany(u => u.RevokedTokens)
+                            .HasForeignKey(rt => rt.UserId);
+
+                revokedToken.HasIndex(rt => rt.TokenHash);
+                revokedToken.HasIndex(rt => rt.RevokedAt);
+            });
 
             modelBuilder.Entity<User>().HasData(new User()
             {
-                Id = Guid.Parse("a1b2c3d4-1234-5678-9012-abcdef123456"), // Fixed GUID
-                Username = "Test",
+                Id = Guid.Parse("a1b2c3d4-1234-5678-9012-abcdef123456"), 
                 PasswordHash = "123",
                 Email = "test@test.com",
                 PhoneCountryCode = "359",
@@ -39,7 +50,7 @@ namespace AutoJournal.Data.Context
                 FullPhoneNumber = "359882251418",
                 PhoneVerified = false,
                 CreatedAt = DateTime.Parse("2025-03-31 13:42:21"),
-                Role = "User" // Explicitly set role
+                Role = "User" 
             });
 
         }

@@ -43,21 +43,12 @@ namespace AutoJournal.Data.Repositories
             return await _context.Users.FirstOrDefaultAsync(u => u.Username == identifier || u.Email == identifier);
         }
 
-        public async Task SaveRefreshTokenAsync(RefreshToken newToken)
+
+
+        public async Task<bool> SaveRefreshTokenAsync(RefreshToken token)
         {
-            
-            var oldTokens = await _context.RefreshTokens
-                .Where(t => t.UserId == newToken.UserId && !t.IsRevoked)
-                .ToListAsync();
-
-            foreach (var token in oldTokens)
-            {
-                token.IsRevoked = true;
-                
-            }
-
-            _context.RefreshTokens.Add(newToken);
-            await _context.SaveChangesAsync();
+            await _context.RefreshTokens.AddAsync(token);
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

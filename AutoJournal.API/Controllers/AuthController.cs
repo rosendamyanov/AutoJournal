@@ -20,7 +20,7 @@ namespace AutoJournal.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserRegisterRequestDTO user)
         {
-            ApiResponse<AuthResponse> response = await _userService.Register(user);
+            ApiResponse<AuthResponseDto> response = await _userService.Register(user);
 
             if (response.IsSuccess)
             {
@@ -33,7 +33,7 @@ namespace AutoJournal.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserLoginRequestDTO user)
         {
-            ApiResponse<AuthResponse> response = await _userService.Login(user);
+            ApiResponse<AuthResponseDto> response = await _userService.Login(user);
             if (response.IsSuccess)
             {
                 return Ok(response);

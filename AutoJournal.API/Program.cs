@@ -36,7 +36,7 @@ namespace AutoJournal.API
 
             // Services
             builder.Services.AddScoped<IAuthService, AuthService>();
-            builder.Services.AddScoped<IJwtService, JwtService>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
 
             // Factories
             builder.Services.AddScoped<IAuthFactory, AuthFactory>();

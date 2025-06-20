@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AutoJournal.DTOs.Response
 {
-    public class AuthResponse
+    public class AuthResponseDto
     {
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }

@@ -18,110 +18,110 @@ namespace AutoJournal.Services.Services
         private readonly IAuthFactory _authFactory;
         private readonly IEmailValidation _emailValidation;
         private readonly IPasswordValidation _passwordValidation;
-        private readonly IJwtService _jwtService;
+        private readonly ITokenService _tokenService;
         private readonly IOptions<JwtSettings> _jwtSettings;
         public AuthService(
             IAuthRepository userRepository, 
             IAuthFactory userFactory, 
             IEmailValidation emailValidation, 
             IPasswordValidation passwordValidation, 
-            IJwtService jwtService,
+            ITokenService tokenService,
             IOptions<JwtSettings> jwtSettings)
         {
             _userRepository = userRepository;
             _authFactory = userFactory;
             _emailValidation = emailValidation;
             _passwordValidation = passwordValidation;
-            _jwtService = jwtService;
+            _tokenService = tokenService;
             _jwtSettings = jwtSettings;
             
         }
 
-        public async Task<ApiResponse<AuthResponse>> Register(UserRegisterRequestDTO requestUser)
-        {
-            //TO DO:
-            //3.Phone number validation.
-            //4.Validation if the email domain is reachable - SignalR
-            //5.Logging Erros in .log files or app console for easier debugging and monitorig
-            
+        //TO DO:
+        //1. Token Refresh (POST /auth/refresh)
+        //2. Logout/Token Revocation (POST /auth/logout)
+        //3. Password Reset Flow (request + confirm endpoints)
+        //4. Email Verification (POST /auth/verify-email)
+        //5. Session Management (list/revoke sessions)
+        //6. Two-Factor Authentication (enable/verify)
+        //7. Phone number validation.
+        //8. Validation if the email domain is reachable - SignalR
+        //9. Logging Erros in .log files or app console for easier debugging and monitoring
+        //10. Implement memory caching for username, email and tokens(to reduce db calls).
 
-            
+        public async Task<ApiResponse<AuthResponseDto>> Register(UserRegisterRequestDTO requestUser)
+        {
+            //VALIDATIONS
             if (!_emailValidation.IsEmailValid(requestUser.Email))
             {
-                return ApiResponse<AuthResponse>.Failure(ResponseMessages.InvalidEmail, ResponseCodes.InvalidEmail);
+                return ApiResponse<AuthResponseDto>.Failure(ResponseMessages.InvalidEmail, ResponseCodes.InvalidEmail);
             }
 
             if (!_passwordValidation.IsStrong(requestUser.Password))
             {
-                return ApiResponse<AuthResponse>.Failure(ResponseMessages.WeakPassword, ResponseCodes.WeakPassword);
+                return ApiResponse<AuthResponseDto>.Failure(ResponseMessages.WeakPassword, ResponseCodes.WeakPassword);
             }
             
-            //Username and Email check if they already exist.
+            //CHECK IF USERNAME OR EMAIL ALREADY EXISTS
             (bool usernameExists, bool emailExists) = await _userRepository.CheckUserExistenceAsync(requestUser.Username, requestUser.Email);
              
             switch(true)
             {
                 case true when usernameExists:
-                    return ApiResponse<AuthResponse>.Failure(ResponseMessages.UsernameExists, ResponseCodes.UsernameExists);
+                    return ApiResponse<AuthResponseDto>.Failure(ResponseMessages.UsernameExists, ResponseCodes.UsernameExists);
                 case true when emailExists:
-                    return ApiResponse<AuthResponse>.Failure(ResponseMessages.EmailExists, ResponseCodes.EmailExists);
-                case true when usernameExists  && emailExists:
-                    return ApiResponse<AuthResponse>.Failure(ResponseMessages.UsernameAndEmailExists, ResponseCodes.UsernameAndEmailExists);
+                    return ApiResponse<AuthResponseDto>.Failure(ResponseMessages.EmailExists, ResponseCodes.EmailExists);
+                case true when usernameExists && emailExists:
+                    return ApiResponse<AuthResponseDto>.Failure(ResponseMessages.UsernameAndEmailExists, ResponseCodes.UsernameAndEmailExists);
             }
 
-            requestUser.Password = BCrypt.Net.BCrypt.HashPassword(requestUser.Password);
-                 
+            requestUser.Password = BCrypt.Net.BCrypt.HashPassword(requestUser.Password);         
             User user = _authFactory.Map(requestUser);
-            // Generate tokens
-            var accessToken = _jwtService.GenerateAccessToken(user);
-            var (rawRefreshToken, refreshToken) = _jwtService.GenerateRefreshToken();
-            // Store refresh token
-            refreshToken.UserId = user.Id;
-            user.RefreshTokens.Add(refreshToken);
+
+            AuthResponseDto tokens = GenerateAndAttachTokens(user);
 
             bool isRegistrationSuccess = await _userRepository.AddUserAsync(user);
 
             if (!isRegistrationSuccess)
             {
-                return ApiResponse<AuthResponse>.Failure(ResponseMessages.RegistratoinFailed, ResponseCodes.RegistrationFailed);
+                return ApiResponse<AuthResponseDto>.Failure(ResponseMessages.RegistratoinFailed, ResponseCodes.RegistrationFailed);
             }
 
-            return ApiResponse<AuthResponse>.Success(new AuthResponse()
-            {
-                AccessToken = accessToken,
-                RefreshToken = rawRefreshToken,
-                AccessTokenExpiry = DateTime.UtcNow.AddMinutes(_jwtSettings.Value.AccessTokenExpirationMinutes)
-            },ResponseMessages.UserRegistered);
-
+            return ApiResponse<AuthResponseDto>.Success(tokens ,ResponseMessages.UserRegistered);
         }
 
-        public async Task<ApiResponse<AuthResponse>> Login(UserLoginRequestDTO requestUser)
+        public async Task<ApiResponse<AuthResponseDto>> Login(UserLoginRequestDTO requestUser)
         {
             User? user = await _userRepository.GetUserByIdentifier(requestUser.Username);
 
             if (user == null)
             {
-                return ApiResponse<AuthResponse>.Failure(ResponseMessages.UserNotFound, ResponseCodes.UserNotFound);
+                return ApiResponse<AuthResponseDto>.Failure(ResponseMessages.UserNotFound, ResponseCodes.UserNotFound);
             }
 
             if (!BCrypt.Net.BCrypt.Verify(requestUser.Password, user.PasswordHash))
             {
-                return ApiResponse<AuthResponse>.Failure(ResponseMessages.InvalidCredentials, ResponseCodes.InvalidCredentials);
+                return ApiResponse<AuthResponseDto>.Failure(ResponseMessages.InvalidCredentials, ResponseCodes.InvalidCredentials);
             }
 
-            // Generate tokens
-            var accessToken = _jwtService.GenerateAccessToken(user);
-            var (rawRefreshToken, refreshToken) = _jwtService.GenerateRefreshToken();
-            // Store refresh token
-            refreshToken.UserId = user.Id;
-            await _userRepository.SaveRefreshTokenAsync(refreshToken);
+            AuthResponseDto tokens = GenerateAndAttachTokens(user);
 
-            return ApiResponse<AuthResponse>.Success(new AuthResponse
+            return ApiResponse<AuthResponseDto>.Success(tokens, ResponseMessages.UserLogged);
+        }
+
+        private AuthResponseDto GenerateAndAttachTokens(User user)
+        {
+            var accessToken = _tokenService.GenerateAccessToken(user);
+            var (rawRefreshToken, refreshToken) = _tokenService.GenerateRefreshToken();
+            refreshToken.UserId = user.Id;
+            user.RefreshTokens.Add(refreshToken);
+
+            return new AuthResponseDto
             {
                 AccessToken = accessToken,
                 RefreshToken = rawRefreshToken,
                 AccessTokenExpiry = DateTime.UtcNow.AddMinutes(_jwtSettings.Value.AccessTokenExpirationMinutes)
-            }, ResponseMessages.UserLogged);
+            };
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Security.Claims;
 
 namespace AutoJournal.Services.Services.Contracts
 {
-    public interface IJwtService
+    public interface ITokenService
     {
         string GenerateAccessToken(User user);
         (string RawToken, RefreshToken HashedToken) GenerateRefreshToken();

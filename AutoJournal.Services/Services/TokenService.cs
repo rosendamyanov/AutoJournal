@@ -3,22 +3,18 @@ using AutoJournal.Data.Models;
 using AutoJournal.Services.Services.Contracts;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AutoJournal.Services.Services
 {
-    public class JwtService : IJwtService
+    public class TokenService : ITokenService
     {
         private readonly JwtSettings _settings;
 
-        public JwtService(IOptions<JwtSettings> settings)
+        public TokenService(IOptions<JwtSettings> settings)
             => _settings = settings.Value;
 
         public string GenerateAccessToken(User user)
@@ -48,14 +44,12 @@ namespace AutoJournal.Services.Services
 
         public (string RawToken, RefreshToken HashedToken) GenerateRefreshToken()
         {
-            // Generate a cryptographically secure random token
             var rawToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
 
-            // Hash it before storing in DB (just like passwords)
             var hashedToken = BCrypt.Net.BCrypt.HashPassword(rawToken);
 
             return (
-                RawToken: rawToken, // Return this to the user
+                RawToken: rawToken,
                 HashedToken: new RefreshToken
                 {
                     TokenHash = hashedToken,
