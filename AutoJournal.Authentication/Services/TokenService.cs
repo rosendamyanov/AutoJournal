@@ -1,6 +1,6 @@
-﻿using AutoJournal.Common.Models;
+﻿using AutoJournal.Authentication.Configuration;
+using AutoJournal.Authentication.Services.Interfaces;
 using AutoJournal.Data.Models;
-using AutoJournal.Services.Services.Contracts;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

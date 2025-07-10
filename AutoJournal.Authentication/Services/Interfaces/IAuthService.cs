@@ -2,7 +2,7 @@
 using AutoJournal.DTOs.Request;
 using AutoJournal.DTOs.Response;
 
-namespace AutoJournal.Services.Services.Contracts
+namespace AutoJournal.Authentication.Services.Interfaces
 {
     public interface IAuthService
     {

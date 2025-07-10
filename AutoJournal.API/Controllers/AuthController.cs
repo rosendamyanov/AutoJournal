@@ -1,7 +1,7 @@
-﻿using AutoJournal.Common.Response;
+﻿using AutoJournal.Authentication.Services.Interfaces;
+using AutoJournal.Common.Response;
 using AutoJournal.DTOs.Request;
 using AutoJournal.DTOs.Response;
-using AutoJournal.Services.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoJournal.API.Controllers

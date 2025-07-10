@@ -1,4 +1,4 @@
-﻿namespace AutoJournal.Services.Validation.AuthValidation.Contracts
+﻿namespace AutoJournal.Authentication.Validation.Interfaces
 {
     public interface IEmailValidation
     {

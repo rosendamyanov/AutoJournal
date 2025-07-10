@@ -1,8 +1,8 @@
 ﻿using AutoJournal.Data.Models;
 using AutoJournal.DTOs.Request;
-using AutoJournal.Services.Factory.Contracts;
+using AutoJournal.Authentication.Factory.Interfaces;
 
-namespace AutoJournal.Services.Factory
+namespace AutoJournal.Authentication.Factory
 {
     public class AuthFactory : IAuthFactory
     {

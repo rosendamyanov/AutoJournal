@@ -43,6 +43,7 @@ namespace AutoJournal.Data.Context
             modelBuilder.Entity<User>().HasData(new User()
             {
                 Id = Guid.Parse("a1b2c3d4-1234-5678-9012-abcdef123456"), 
+                Username = "test",
                 PasswordHash = "123",
                 Email = "test@test.com",
                 PhoneCountryCode = "359",

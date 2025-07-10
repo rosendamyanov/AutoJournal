@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="DTOs\Request\" />
+    <Folder Include="DTOs\Response\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AutoJournal.Common\AutoJournal.Common.csproj" />
+    <ProjectReference Include="..\AutoJournal.Data\AutoJournal.Data.csproj" />
+    <ProjectReference Include="..\AutoJournal.DTOs\AutoJournal.DTOs.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,6 +1,6 @@
 ﻿using AutoJournal.Data.Models;
 
-namespace AutoJournal.Data.Repositories.Contracts
+namespace AutoJournal.Data.Repositories.Interfaces
 {
     public interface IAuthRepository
     {

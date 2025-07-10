@@ -1,4 +1,4 @@
-﻿namespace AutoJournal.Common.Models
+﻿namespace AutoJournal.Authentication.Configuration
 {
     public class JwtSettings
     {

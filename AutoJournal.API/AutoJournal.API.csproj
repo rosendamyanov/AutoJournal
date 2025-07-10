@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AutoJournal.Authentication\AutoJournal.Authentication.csproj" />
     <ProjectReference Include="..\AutoJournal.Data\AutoJournal.Data.csproj" />
     <ProjectReference Include="..\AutoJournal.DTOs\AutoJournal.DTOs.csproj" />
     <ProjectReference Include="..\AutoJournal.Services\AutoJournal.Services.csproj" />

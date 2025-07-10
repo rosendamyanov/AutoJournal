@@ -1,7 +1,7 @@
 ﻿using AutoJournal.Data.Models;
 using System.Security.Claims;
 
-namespace AutoJournal.Services.Services.Contracts
+namespace AutoJournal.Authentication.Services.Interfaces
 {
     public interface ITokenService
     {

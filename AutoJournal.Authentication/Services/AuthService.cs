@@ -1,16 +1,16 @@
-﻿using AutoJournal.Data.Models;
-using AutoJournal.Common.Response;
-using AutoJournal.Data.Repositories.Contracts;
+﻿using AutoJournal.Authentication.Factory.Interfaces;
+using AutoJournal.Authentication.Services.Interfaces;
+using AutoJournal.Authentication.Validation.Interfaces;
+using AutoJournal.Authentication.Configuration;
+using AutoJournal.Data.Repositories.Interfaces;
+using AutoJournal.Data.Models;
 using AutoJournal.DTOs.Request;
-using AutoJournal.Services.Factory.Contracts;
-using AutoJournal.Services.Services.Contracts;
-using AutoJournal.Services.Validation.AuthValidation.Contracts;
-using BCrypt.Net;
 using AutoJournal.DTOs.Response;
-using AutoJournal.Common.Models;
+using AutoJournal.Common.Response;
 using Microsoft.Extensions.Options;
+using BCrypt.Net;
 
-namespace AutoJournal.Services.Services
+namespace AutoJournal.Authentication.Services
 {
     public class AuthService : IAuthService
     {

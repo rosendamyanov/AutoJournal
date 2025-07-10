@@ -1,9 +1,8 @@
-﻿using AutoJournal.Common.Response;
-using AutoJournal.Services.Validation.AuthValidation.Contracts;
+﻿using AutoJournal.Authentication.Validation.Interfaces;
 using System.Text.RegularExpressions;
 
 
-namespace AutoJournal.Services.Validation.AuthValidation
+namespace AutoJournal.Authentication.Validation
 {
     public class EmailValidation :IEmailValidation
     {

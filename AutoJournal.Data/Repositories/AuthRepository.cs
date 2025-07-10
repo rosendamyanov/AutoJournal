@@ -1,6 +1,6 @@
 ﻿using AutoJournal.Data.Context;
 using AutoJournal.Data.Models;
-using AutoJournal.Data.Repositories.Contracts;
+using AutoJournal.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace AutoJournal.Data.Repositories
