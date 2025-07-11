@@ -62,7 +62,6 @@ namespace AutoJournal.Services.Services
 
         public bool ValidateRefreshToken(string rawToken, RefreshToken storedToken)
         {
-            // Verify the raw token against the hashed version
             return BCrypt.Net.BCrypt.Verify(rawToken, storedToken.TokenHash);
         }
 

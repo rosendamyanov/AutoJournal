@@ -40,5 +40,16 @@ namespace AutoJournal.API.Controllers
             }
             return BadRequest(response);
         }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> RefreshToken(RefreshRequestDto refresh)
+        {
+            ApiResponse<AuthResponseDto> response = await _userService.RefreshToken(refresh);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
     }
 }

@@ -10,6 +10,7 @@ namespace AutoJournal.DTOs.Response
     {
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
+        public Guid RefreshTokenId { get; set; }
         public DateTime AccessTokenExpiry { get; set; }
     }
 }

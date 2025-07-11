@@ -40,14 +40,41 @@ namespace AutoJournal.Data.Repositories
 
         public async Task<User?> GetUserByIdentifier(string identifier)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Username == identifier || u.Email == identifier);
+            return await _context.Users
+                                 .Include(u => u.RefreshTokens)
+                                 .FirstOrDefaultAsync(u => u.Username == identifier || u.Email == identifier);
         }
 
-
-
-        public async Task<bool> SaveRefreshTokenAsync(RefreshToken token)
+        public async Task<User?> GetUserRefreshToken(string username)
         {
-            await _context.RefreshTokens.AddAsync(token);
+            return await _context.Users
+                                 .Include(r => r.RefreshTokens)
+                                 .Include(r => r.RevokedTokens)
+                                 .FirstOrDefaultAsync(u => u.Username.Equals(username));
+        }
+
+        public async Task<RefreshToken?> GetRefreshTokenByIdAsync(Guid refreshTokenId, Guid userId)
+        {
+            return await _context.RefreshTokens.FirstOrDefaultAsync(rt => rt.Id == refreshTokenId && rt.UserId == userId);
+        }
+
+        public async Task<bool> SaveRevokedRefreshTokenAsync(RevokedToken revokedToken, RefreshToken refreshToken)
+        {
+            _context.Update(refreshToken);
+            _context.Add(revokedToken);
+
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> SaveRefreshTokenAsync(RefreshToken refreshToken)
+        {
+            _context.Add(refreshToken);
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> SaveUserRefreshTokenAsync(User user)
+        {
+            _context.Users.Update(user);
             return await _context.SaveChangesAsync() > 0;
         }
     }

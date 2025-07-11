@@ -8,5 +8,6 @@ namespace AutoJournal.Authentication.Services.Interfaces
     {
         Task<ApiResponse<AuthResponseDto>> Register(UserRegisterRequestDTO user);
         Task<ApiResponse<AuthResponseDto>> Login(UserLoginRequestDTO requestUser);
+        Task<ApiResponse<AuthResponseDto>> RefreshToken(RefreshRequestDto refresh);
     }
 }
